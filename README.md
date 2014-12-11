@@ -39,6 +39,7 @@ http://localhost:8080/multipart-producer/TestServlet&test=wooohooo&test2=true&
 array example:
 http://localhost:8080/multipart-producer/TestServlet?echo=awesome&array=1&array=2
 
+  Produces:
 ```
   --11223344556677889900
   Content-Type: application/json
