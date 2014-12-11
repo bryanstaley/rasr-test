@@ -6,12 +6,13 @@ The base url is:
 /multipart-producer/TestServlet
 
 Special query parameters:
-separate=<anything really> # Produces a seperate multipart section for each query parameter provided
+separate=<anything really> # Produces a separate multipart section for each query parameter provided
 
 
 Example GET urls:
 
-seperate example:
+separate example:
+
 http://localhost:8080/multipart-producer/TestServlet&test=wooohooo&separate=true&
 
   Produces:
@@ -26,6 +27,7 @@ http://localhost:8080/multipart-producer/TestServlet&test=wooohooo&separate=true
 ```
 
 together example:
+
 http://localhost:8080/multipart-producer/TestServlet&test=wooohooo&test2=true&
 
   Produces:
@@ -37,6 +39,7 @@ http://localhost:8080/multipart-producer/TestServlet&test=wooohooo&test2=true&
 ```
 
 array example:
+
 http://localhost:8080/multipart-producer/TestServlet?echo=awesome&array=1&array=2
 
   Produces:
