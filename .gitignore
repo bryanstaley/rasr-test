@@ -1,0 +1,11 @@
+*.tar
+*.swp
+tmp*
+*.tar.gz
+MANIFEST
+*.tar.gz
+*.tgz
+build
+/.project
+.coverage
+.settings
