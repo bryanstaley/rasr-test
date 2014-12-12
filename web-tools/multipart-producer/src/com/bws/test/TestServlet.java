@@ -130,7 +130,16 @@ public class TestServlet extends HttpServlet {
 		Map<String, String[]> queryParms = request.getParameterMap();
 		List<MultipartFragment> frags = new ArrayList<MultipartFragment>();
 		StringBuilder sb = new StringBuilder();
+		Integer delayMs = 0;
 
+		if (queryParms.containsKey("delay")) {
+			try {
+				delayMs = Integer.parseInt(queryParms.get("delay")[0]);
+			} catch (Exception e) {
+				e.printStackTrace();
+				delayMs = 0;
+			}
+		}
 		if (queryParms.containsKey("separate")) {
 			for (Entry<String, String[]> entry : queryParms.entrySet()) {
 				JSONObject obj = new JSONObject(queryParms);
@@ -147,28 +156,33 @@ public class TestServlet extends HttpServlet {
 			JSONObject obj = new JSONObject(queryParms);
 			try {
 				frags.add(buildJsonFrag(boundary, obj));
+
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
 		}
 
-		sb.append("\n");
-
-		for (MultipartFragment mpf : frags) {
-
-			sb.append(mpf.toString());
-			sb.append("\n");
-		}
-
-		String closingBoundary = "--" + boundary + "--";
-		sb.append(closingBoundary);
-
 		response.setHeader("Content-Type", "Multipart/mixed; boundary=\""
 				+ boundary + "\"");
+
 		// response.setHeader("Content-Length",
 		// Integer.toString(sb.toString().getBytes().length));
 
-		response.getOutputStream().write(sb.toString().getBytes());
+		for (MultipartFragment mpf : frags) {
+
+			response.getOutputStream().write(mpf.toString().getBytes());
+			response.getOutputStream().write("\n".getBytes());
+			response.getOutputStream().flush();
+			try {
+				Thread.currentThread().sleep(delayMs);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		String closingBoundary = "--" + boundary + "--";
+		response.getOutputStream().write(closingBoundary.getBytes());
 		response.getOutputStream().close();
 
 	}
@@ -182,7 +196,16 @@ public class TestServlet extends HttpServlet {
 		Map<String, String[]> queryParms = request.getParameterMap();
 		List<MultipartFragment> frags = new ArrayList<MultipartFragment>();
 		StringBuilder sb = new StringBuilder();
+		Integer delayMs = 0;
 
+		if (queryParms.containsKey("delay")) {
+			try {
+				delayMs = Integer.parseInt(queryParms.get("delay")[0]);
+			} catch (Exception e) {
+				e.printStackTrace();
+				delayMs = 0;
+			}
+		}
 		if (queryParms.containsKey("separate")) {
 			for (Entry<String, String[]> entry : queryParms.entrySet()) {
 				JSONObject obj = new JSONObject(queryParms);
@@ -199,30 +222,34 @@ public class TestServlet extends HttpServlet {
 			JSONObject obj = new JSONObject(queryParms);
 			try {
 				frags.add(buildJsonFrag(boundary, obj));
+
 			} catch (JSONException e) {
 				e.printStackTrace();
 			}
 		}
 
-		sb.append("\n");
-
-		for (MultipartFragment mpf : frags) {
-
-			sb.append(mpf.toString());
-			sb.append("\n");
-		}
-
-		String closingBoundary = "--" + boundary + "--";
-		sb.append(closingBoundary);
-
 		response.setHeader("Content-Type", "Multipart/mixed; boundary=\""
 				+ boundary + "\"");
+
 		// response.setHeader("Content-Length",
 		// Integer.toString(sb.toString().getBytes().length));
 
-		response.getOutputStream().write(sb.toString().getBytes());
-		response.getOutputStream().close();
+		for (MultipartFragment mpf : frags) {
 
+			response.getOutputStream().write(mpf.toString().getBytes());
+			response.getOutputStream().write("\n".getBytes());
+			response.getOutputStream().flush();
+			try {
+				Thread.currentThread().sleep(delayMs);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+
+		String closingBoundary = "--" + boundary + "--";
+		response.getOutputStream().write(closingBoundary.getBytes());
+		response.getOutputStream().close();
 	}
 
 }

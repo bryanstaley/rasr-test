@@ -6,7 +6,10 @@ The base url is:
 /multipart-producer/TestServlet
 
 Special query parameters:
+
 separate=<anything really> # Produces a separate multipart section for each query parameter provided
+
+delay=<integer value representing milliseconds> # Will force delay when transmitting the individual multipart sections.  Meaningless if seperate (see above) isn't specified
 
 
 Example GET urls:
