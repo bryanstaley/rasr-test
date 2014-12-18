@@ -14,8 +14,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.bws.test.RecognizerPool.UnrecognizedRecognizer;
+
+import edu.cmu.sphinx.decoder.ResultListener;
 import edu.cmu.sphinx.frontend.util.StreamDataSource;
-import edu.cmu.sphinx.recognizer.Recognizer;
 import edu.cmu.sphinx.result.Result;
 import edu.cmu.sphinx.util.props.ConfigurationManager;
 import edu.cmu.sphinx.util.props.PropertyException;
@@ -23,21 +25,25 @@ import edu.cmu.sphinx.util.props.PropertyException;
 @WebServlet("/streaming")
 public class StreamingRasrServlet extends HttpServlet {
 
-	private Recognizer recognizer;
-	private ConfigurationManager config;
 	private static final Class[] parameters = new Class[] { URL.class };
+	private static RecognizerPool recognizerPool;
+	private boolean hasUpdatedClassPath = false;
+	private URI lasik;
+	ResultListener resultListener;
 
 	public StreamingRasrServlet() throws URISyntaxException, PropertyException,
 			MalformedURLException {
 		URI base = new URI(
 				"file:///home/bstaley/git/rasr/rasr-ws/src/main/webapp/config/baseconfig.xml");
-		URI lasik = new URI(
-				"file:///home/bstaley/git/rasr/rasr-ws/src/main/webapp/config/lasik-config.xml");
+		lasik = new URI(
+				"file:///home/bstaley/git/rasr-test/web-tools/test-config.xml");
 		ConfigurationManager baseConfigManager = new ConfigurationManager(
 				base.toURL());
 
-		config = new TwoTierConfigurationManager(baseConfigManager,
-				lasik.toURL());
+		recognizerPool = new BlockingRecognizerPool(1, baseConfigManager,
+				"wordRecognizer");
+
+		resultListener = new IncrementalResultsListener();
 
 	}
 
@@ -45,36 +51,48 @@ public class StreamingRasrServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-
 	}
 
 	protected void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 
+		if (!hasUpdatedClassPath) {
+			hasUpdatedClassPath = true;
+			updateClassPath((URLClassLoader) request.getSession()
+					.getServletContext().getClassLoader());
+		}
 		StreamDataSource source;
+
+		StreamingRecognizer recognizer = recognizerPool.checkout(lasik);
+		recognizer.addResultListener(resultListener);
+		recognizer.getSource().setInputStream(request.getInputStream(), "");
+		Result r = recognizer.recognize();
+		recognizer.removeResultListener(resultListener);
 		try {
-			final URLClassLoader sysloader = (URLClassLoader) this
-					.getServletContext().getClassLoader();
+			recognizerPool.checkin(lasik, recognizer);
+		} catch (UnrecognizedRecognizer e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	private void updateClassPath(URLClassLoader cl) {
+		try {
+
 			final Class<URLClassLoader> sysclass = URLClassLoader.class;
 			Method method = sysclass.getDeclaredMethod("addURL", parameters);
 			method.setAccessible(true);
-			method.invoke(sysloader, new Object[] { new URI(
+			method.invoke(cl, new Object[] { new URI(
 					"file:///home/bstaley/git/rasr/rasr-data/").toURL() });
-			method.invoke(sysloader, new Object[] { new URI(
+			method.invoke(cl, new Object[] { new URI(
 					"file:///home/bstaley/git/sphinx4-data/").toURL() });
-			method.invoke(sysloader, new Object[] { new URI(
+			method.invoke(cl, new Object[] { new URI(
 					"file:///home/bstaley/git/rasr/rasr-data/phonemes/")
 					.toURL() });
 		} catch (final Throwable t) {
 			t.printStackTrace();
 		}
-		recognizer = (Recognizer) config.lookup("wordRecognizer");
-		recognizer.allocate();
-		recognizer.addResultListener(new IncrementalResultsListener());
-		source = (StreamDataSource) config.lookup("streamDataSource");
-
-		source.setInputStream(request.getInputStream(), "");
-		Result r = recognizer.recognize();
 	}
 
 }

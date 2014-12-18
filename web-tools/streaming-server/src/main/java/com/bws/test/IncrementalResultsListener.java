@@ -7,15 +7,16 @@ import edu.cmu.sphinx.util.props.PropertySheet;
 
 public class IncrementalResultsListener implements ResultListener {
 
-	@Override
-	public void newProperties(PropertySheet ps) throws PropertyException {
+	public void newProperties(PropertySheet arg0) throws PropertyException {
 		// TODO Auto-generated method stub
 
 	}
 
-	@Override
 	public void newResult(Result result) {
-		System.out.println("BWS ===> " + result.toString());
+		System.out.println("BWS ===> " + result.toString());// TODO
+															// Auto-generated
+															// method stub
+
 	}
 
 }
