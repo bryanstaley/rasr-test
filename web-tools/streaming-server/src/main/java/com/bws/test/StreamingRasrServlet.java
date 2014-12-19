@@ -17,7 +17,6 @@ import javax.servlet.http.HttpServletResponse;
 import com.bws.test.RecognizerPool.UnrecognizedRecognizer;
 
 import edu.cmu.sphinx.decoder.ResultListener;
-import edu.cmu.sphinx.frontend.util.StreamDataSource;
 import edu.cmu.sphinx.result.Result;
 import edu.cmu.sphinx.util.props.ConfigurationManager;
 import edu.cmu.sphinx.util.props.PropertyException;
@@ -43,7 +42,7 @@ public class StreamingRasrServlet extends HttpServlet {
 		recognizerPool = new BlockingRecognizerPool(1, baseConfigManager,
 				"wordRecognizer");
 
-		resultListener = new IncrementalResultsListener();
+		resultListener = new DumpResultListener();
 
 	}
 
@@ -61,13 +60,11 @@ public class StreamingRasrServlet extends HttpServlet {
 			updateClassPath((URLClassLoader) request.getSession()
 					.getServletContext().getClassLoader());
 		}
-		StreamDataSource source;
 
 		StreamingRecognizer recognizer = recognizerPool.checkout(lasik);
-		recognizer.addResultListener(resultListener);
 		recognizer.getSource().setInputStream(request.getInputStream(), "");
+		recognizer.getResultsListener().setOutput(response.getOutputStream());
 		Result r = recognizer.recognize();
-		recognizer.removeResultListener(resultListener);
 		try {
 			recognizerPool.checkin(lasik, recognizer);
 		} catch (UnrecognizedRecognizer e) {

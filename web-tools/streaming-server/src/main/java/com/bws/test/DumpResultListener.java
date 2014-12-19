@@ -5,7 +5,7 @@ import edu.cmu.sphinx.result.Result;
 import edu.cmu.sphinx.util.props.PropertyException;
 import edu.cmu.sphinx.util.props.PropertySheet;
 
-public class IncrementalResultsListener implements ResultListener {
+public class DumpResultListener implements ResultListener {
 
 	public void newProperties(PropertySheet arg0) throws PropertyException {
 		// TODO Auto-generated method stub

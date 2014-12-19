@@ -52,6 +52,7 @@
     <component name="wordRecognizer"
           type="com.bws.test.StreamingRecognizer">
         <property name="streamDataSource" value="streamDataSource"/>
+        <property name="resultListenerSource" value="resultListenerSource"/>
         <propertylist name="monitors">
             <item>accuracyTracker</item>
             <item>speedTracker</item>
@@ -151,8 +152,7 @@
           type="edu.cmu.sphinx.decoder.scorer.ThreadedAcousticScorer">
         <property name="frontend" value="${frontend}"/>
     </component>
-    
-               
+
     <!-- ************************************************** -->
     <!-- mfcFrontEnd                                        -->
     <!-- ************************************************** -->
@@ -171,6 +171,16 @@
         </propertylist>
     </component>
     
+    <component name="resultListenerSource" 
+                type="com.bws.test.OutStreamResultListener">
+        <property name="scorer" value="${scorer}"/>
+        <property name="outputFormatter" value="multipartOutputFormatter"/>
+    </component>
+
+    <component name="multipartOutputFormatter" 
+                type="com.bws.test.formatters.HtmlMultipartFormatter">
+    </component>
+
     <!-- ************************************************** -->
     <!-- streamDataSource                                   -->
     <!-- ************************************************** -->
