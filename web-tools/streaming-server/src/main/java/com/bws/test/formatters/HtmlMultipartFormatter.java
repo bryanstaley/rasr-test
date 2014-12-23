@@ -25,8 +25,10 @@ public class HtmlMultipartFormatter implements OutputFormatter {
 		JSONObject jsonObj = new JSONObject(m);
 
 		try {
-			return buildJsonFrag("112233445566778899001234567890", jsonObj)
-					.toString().getBytes();
+			String json = buildJsonFrag("112233445566778899001234567890",
+					jsonObj).toString();
+			System.out.println(json);
+			return json.getBytes();
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

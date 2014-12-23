@@ -4,7 +4,6 @@ import static org.junit.Assert.fail;
 
 import javax.sound.sampled.AudioFormat;
 import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.DataLine;
 import javax.sound.sampled.Line;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.Mixer;
@@ -12,7 +11,7 @@ import javax.sound.sampled.TargetDataLine;
 
 import org.junit.Test;
 
-import com.redshift.teset.RasrStreamingRequest;
+import com.redshift.test.RasrStreamingRequest;
 
 public class StreamingClientTest {
 
@@ -23,20 +22,18 @@ public class StreamingClientTest {
 	@Test
 	public void test() throws LineUnavailableException {
 		TargetDataLine line = null;
-		
-	     Line.Info[] targetLineInfo = mixer.getTargetLineInfo();
-	     System.out.println(targetLineInfo[0]);
-	     
-	     if (targetLineInfo.length > 0) {
-	            line = (TargetDataLine) mixer.getLine(targetLineInfo[0]);
-	     }
-	     else
-	     {
-	    	 fail("couldn't find a record mixer");
-	     }
-	    
+
+		Line.Info[] targetLineInfo = mixer.getTargetLineInfo();
+		System.out.println(targetLineInfo[0]);
+
+		if (targetLineInfo.length > 0) {
+			line = (TargetDataLine) mixer.getLine(targetLineInfo[0]);
+		} else {
+			fail("couldn't find a record mixer");
+		}
+
 		try {
-			
+
 			line.open();
 			line.start();
 			RasrStreamingRequest request = new RasrStreamingRequest(

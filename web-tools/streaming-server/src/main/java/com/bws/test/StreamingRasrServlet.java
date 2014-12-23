@@ -32,10 +32,8 @@ public class StreamingRasrServlet extends HttpServlet {
 
 	public StreamingRasrServlet() throws URISyntaxException, PropertyException,
 			MalformedURLException {
-		URI base = new URI(
-				"file:///home/bstaley/git/rasr/rasr-ws/src/main/webapp/config/baseconfig.xml");
-		lasik = new URI(
-				"file:///home/bstaley/git/rasr-test/web-tools/test-config.xml");
+		URI base = new URI("file:///tmp/baseconfig.xml");
+		lasik = new URI("file:///tmp/test-config.xml");
 		ConfigurationManager baseConfigManager = new ConfigurationManager(
 				base.toURL());
 
