@@ -14,6 +14,10 @@ public class RasrStreamingClientTest {
 		List<String> args = new ArrayList();
 		args.add("-f");
 		args.add("/home/bstaley/git/rasr/rasr-sr/test/A4.wav");
+		args.add("-l");
+		args.add("5");
+		args.add("-d");
+		args.add("250");
 		RasrStreamingClient.main(args.toArray(new String[0]));
 	}
 }

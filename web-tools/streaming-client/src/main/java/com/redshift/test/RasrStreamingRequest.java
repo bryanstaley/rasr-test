@@ -78,8 +78,6 @@ public class RasrStreamingRequest {
 			byte[] data = new byte[BUFFER_SIZE];
 			int numBytesRead = input.read(data, 0, data.length);
 			while (numBytesRead != -1) {
-
-				System.out.println("Writing bytes: " + numBytesRead);
 				arg0.write(data, 0, numBytesRead);
 				arg0.flush();
 				numBytesRead = input.read(data, 0, data.length);

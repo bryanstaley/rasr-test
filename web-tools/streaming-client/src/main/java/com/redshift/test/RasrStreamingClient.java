@@ -43,9 +43,13 @@ public class RasrStreamingClient {
 
 		options.addOption(FILE_SHORT_OPT, FILE_LONG_OPT, true,
 				"The file to stream")
-				.addOption(DELAY_SHORT_OPT, DELAY_LONG_OPT, false,
+				.addOption(DELAY_SHORT_OPT, DELAY_LONG_OPT, true,
 						"delay in microsecods")
-				.addOption(BYTES_SHORT_OPT, BYTES_LONG_OPT, false,
+				.addOption(BYTES_SHORT_OPT, BYTES_LONG_OPT, true,
+						"bytes between delay")
+				.addOption(LOOPS_SHORT_OPT, LOOPS_LONG_OPT, true,
+						"bytes between delay")
+				.addOption(MARK_SHORT_OPT, MARK_LONG_OPT, true,
 						"bytes between delay");
 
 		parser = new BasicParser();
@@ -63,9 +67,10 @@ public class RasrStreamingClient {
 		int DELAY_MSECS = 1; // 1/1000 of a second
 		int LOOPS = 1;
 		int MARK_SAVE_BYTES = 1000000;
+
 		DataInputStream inputStream = null;
 		RasrStreamingRequest request = new RasrStreamingRequest(
-				"http://localhost:8080/streaming-server/streaming");
+				"http://localhost:8080/rasr-streaming-server/streaming");
 
 		try {
 			CommandLine cmd = parser.parse(options, args);
@@ -76,6 +81,7 @@ public class RasrStreamingClient {
 			}
 
 			if (cmd.hasOption(LOOPS_LONG_OPT)) {
+				System.out.print(cmd.getOptionValue(LOOPS_LONG_OPT));
 				LOOPS = Integer.parseInt(cmd.getOptionValue(LOOPS_LONG_OPT));
 			}
 			if (cmd.hasOption(DELAY_LONG_OPT)) {
@@ -91,36 +97,39 @@ public class RasrStreamingClient {
 				File inputFile = new File(cmd.getOptionValue(FILE_LONG_OPT));
 				inputStream = new DataInputStream(
 						new FileInputStream(inputFile));
-				inputStream.mark(MARK_SAVE_BYTES);
 				PipedOutputStream output = new PipedOutputStream();
-				PipedInputStream input = new PipedInputStream(output);
+				PipedInputStream input = new PipedInputStream(BYTE_BUFFER);
+				input.connect(output);
 				byte[] buffer = new byte[BYTE_BUFFER];
 
 				// Start the streaming!
-				executor.execute(new StreamingRequestRunner(request,
-						inputStream));
+				executor.execute(new StreamingRequestRunner(request, input));
 
 				int loop_number = 1;
 				int read = 0;
 
-				// while (true) {
-				//
-				// // Send the bytes!
-				// read = inputStream.read(buffer);
-				//
-				// if (read == -1) // reached EOF
-				// {
-				// loop_number++;
-				// if (loop_number > LOOPS)
-				// break;
-				// inputStream.reset();
-				// read = inputStream.read(buffer);
-				// }
-				// output.write(buffer, 0, read);
-				// Thread.sleep(DELAY_MSECS);
-				// }
+				while (true) {
 
-				executor.awaitTermination(100, TimeUnit.SECONDS);
+					// Send the bytes!
+					read = inputStream.read(buffer);
+
+					if (read == -1) // reached EOF
+					{
+						loop_number++;
+						if (loop_number > LOOPS)
+							break;
+						inputStream = new DataInputStream(new FileInputStream(
+								inputFile));
+
+						read = inputStream.read(buffer);
+					}
+					System.out.println("Writing bytes:" + read);
+					output.write(buffer, 0, read);
+
+					Thread.sleep(DELAY_MSECS);
+				}
+
+				executor.awaitTermination(10, TimeUnit.SECONDS);
 
 				output.close();
 				input.close();
