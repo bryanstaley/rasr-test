@@ -9,6 +9,7 @@ import java.util.Map;
 import com.bws.test.formatters.OutputFormatter;
 
 import edu.cmu.sphinx.decoder.ResultListener;
+import edu.cmu.sphinx.frontend.endpoint.SpeechMarker;
 import edu.cmu.sphinx.result.ConfidenceResult;
 import edu.cmu.sphinx.result.ConfidenceScorer;
 import edu.cmu.sphinx.result.Path;
@@ -26,7 +27,7 @@ public class OutStreamResultListener implements ResultListener, Configurable {
 	private ConfidenceScorer scorer;
 
 	private OutputFormatter formatter;
-
+	
 	@S4Component(type = ConfidenceScorer.class)
 	public final static String CONF_SCORER_SOURCE = "scorer";
 

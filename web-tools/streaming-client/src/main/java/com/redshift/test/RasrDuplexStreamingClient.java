@@ -17,7 +17,7 @@ import org.apache.commons.cli.CommandLineParser;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 
-public class RasrStreamingClient {
+public class RasrDuplexStreamingClient {
 
 	private static Options options;
 
@@ -55,23 +55,22 @@ public class RasrStreamingClient {
 		parser = new BasicParser();
 	}
 
-	public RasrStreamingClient() {
+	public RasrDuplexStreamingClient() {
 
 	}
 
 	public static void main(String[] args) {
 
-		ExecutorService executor = Executors.newSingleThreadExecutor();
-
+		ExecutorService executor = Executors.newFixedThreadPool(4);
 		int BYTE_BUFFER = 1024 * 10;
 		int DELAY_MSECS = 1; // 1/1000 of a second
 		int LOOPS = 1;
-		int MARK_SAVE_BYTES = 1000000;
 
 		DataInputStream inputStream = null;
+		String recognizeUrl = "http://localhost:8080/rasr-streaming-server/streaming/duplex?requestid=HUMPTY_DUMPTY_HAD_A_GREAT_FALL";
 		RasrStreamingRequest request = new RasrStreamingRequest(
 		// "http://localhost:8080/rasr-ws/rasr/control/42");
-				"http://localhost:8080/rasr-streaming-server/streaming");
+				recognizeUrl);
 
 		try {
 			CommandLine cmd = parser.parse(options, args);
@@ -89,10 +88,6 @@ public class RasrStreamingClient {
 				DELAY_MSECS = Integer.parseInt(cmd
 						.getOptionValue(DELAY_LONG_OPT));
 			}
-			if (cmd.hasOption(MARK_LONG_OPT)) {
-				MARK_SAVE_BYTES = Integer.parseInt(cmd
-						.getOptionValue(MARK_LONG_OPT));
-			}
 
 			if (cmd.hasOption(FILE_LONG_OPT)) {
 				File inputFile = new File(cmd.getOptionValue(FILE_LONG_OPT));
@@ -105,6 +100,11 @@ public class RasrStreamingClient {
 
 				// Start the streaming!
 				executor.execute(new StreamingRequestRunner(request, input));
+				Thread.currentThread();
+				// Start the result processing
+				Thread.sleep(4000); // Lame way to ensure request is sent before
+									// response-request is sent
+				executor.execute(new DuplexResponseHandler(recognizeUrl));
 
 				int loop_number = 1;
 				int read = 0;

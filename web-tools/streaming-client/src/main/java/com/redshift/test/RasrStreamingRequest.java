@@ -15,6 +15,7 @@ import org.apache.http.impl.client.DefaultHttpClient;
 public class RasrStreamingRequest {
 
 	private String uri;
+	private static final int BUFFER_SIZE = 2048;
 
 	public RasrStreamingRequest(String uri) {
 
@@ -40,24 +41,21 @@ public class RasrStreamingRequest {
 		HttpPost request = new HttpPost(this.uri);
 		// request.setHeader("Expect", "");
 		request.setHeader("content-type", "audio/x-pcm");
+		request.setHeader("User-Agent", "bryan-test");
+		request.setHeader("Accept_Language", "en-US");
 		request.setEntity(new InputStreamingEntity(stream));
 
 		DefaultHttpClient client = new DefaultHttpClient();
 		CloseableHttpResponse response = client.execute(request);
-		InputStream is = response.getEntity().getContent();
+
 	}
 
 	private static class InputStreamingEntity extends AbstractHttpEntity {
 		InputStream input;
-		private static final int BUFFER_SIZE = 1024 * 10;
+		private static final int BUFFER_SIZE = 2048;
 
 		public InputStreamingEntity(InputStream input) {
 			this.input = input;
-		}
-
-		public InputStream getContent() throws IOException,
-				IllegalStateException {
-			return null;
 		}
 
 		public long getContentLength() {
@@ -74,15 +72,19 @@ public class RasrStreamingRequest {
 		}
 
 		public void writeTo(OutputStream arg0) throws IOException {
-
 			byte[] data = new byte[BUFFER_SIZE];
 			int numBytesRead = input.read(data, 0, data.length);
 			while (numBytesRead != -1) {
 				arg0.write(data, 0, numBytesRead);
-				arg0.flush();
 				numBytesRead = input.read(data, 0, data.length);
 			}
 
+		}
+
+		public InputStream getContent() throws IOException,
+				IllegalStateException {
+			// TODO Auto-generated method stub
+			return null;
 		}
 	}
 
