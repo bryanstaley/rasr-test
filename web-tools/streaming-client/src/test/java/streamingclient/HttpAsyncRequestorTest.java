@@ -25,8 +25,8 @@ import org.apache.http.protocol.RequestExpectContinue;
 import org.apache.http.protocol.RequestTargetHost;
 import org.junit.Test;
 
-import com.redshift.test.Async.AudioRequestProducer;
-import com.redshift.test.Async.AudioResultConsumer;
+import com.redshift.streaming.AudioRequestProducer;
+import com.redshift.streaming.AudioResultConsumer;
 import com.redshift.test.Async.AudioStreamingEntity;
 import com.redshift.test.Async.ReactorRunner;
 

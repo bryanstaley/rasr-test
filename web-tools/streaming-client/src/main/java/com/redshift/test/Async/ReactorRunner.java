@@ -4,9 +4,10 @@ import java.io.IOException;
 
 import org.apache.http.config.ConnectionConfig;
 import org.apache.http.impl.nio.DefaultHttpClientIODispatch;
-import org.apache.http.nio.protocol.HttpAsyncRequestExecutor;
 import org.apache.http.nio.reactor.IOEventDispatch;
 import org.apache.http.nio.reactor.IOReactor;
+
+import com.redshift.test.NioOutputEventHandler;
 
 public class ReactorRunner implements Runnable {
 	IOReactor reactor;
@@ -18,7 +19,7 @@ public class ReactorRunner implements Runnable {
 
 	public void run() {
 		IOEventDispatch ioEventDispatch = new DefaultHttpClientIODispatch(
-				new HttpAsyncRequestExecutor(), ConnectionConfig.DEFAULT);
+				new NioOutputEventHandler(), ConnectionConfig.DEFAULT);
 		try {
 			System.out.println("Starting reactor");
 			reactor.execute(ioEventDispatch);

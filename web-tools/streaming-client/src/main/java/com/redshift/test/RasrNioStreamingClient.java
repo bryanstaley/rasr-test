@@ -29,6 +29,7 @@ import org.apache.http.nio.protocol.HttpAsyncRequester;
 import org.apache.http.nio.reactor.IOReactorException;
 import org.apache.http.nio.reactor.IOSession;
 import org.apache.http.nio.reactor.SessionRequest;
+import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpProcessor;
 import org.apache.http.protocol.HttpProcessorBuilder;
 import org.apache.http.protocol.RequestConnControl;
@@ -36,8 +37,9 @@ import org.apache.http.protocol.RequestContent;
 import org.apache.http.protocol.RequestTargetHost;
 import org.apache.http.protocol.RequestUserAgent;
 
-import com.redshift.test.Async.AudioRequestProducer;
-import com.redshift.test.Async.AudioResultConsumer;
+import com.redshift.streaming.AudioRequestProducer;
+import com.redshift.streaming.AudioResultConsumer;
+import com.redshift.test.Async.AudioStreamingClientConnection;
 import com.redshift.test.Async.AudioStreamingEntity;
 import com.redshift.test.Async.ReactorRunner;
 
@@ -108,8 +110,10 @@ public class RasrNioStreamingClient {
 		// dhac.start();
 		DataInputStream inputStream = null;
 		IOSession iosession = session.getSession();
-		DefaultNHttpClientConnection dnhcc = new DefaultNHttpClientConnection(
+		DefaultNHttpClientConnection dnhcc = new AudioStreamingClientConnection(
 				iosession, 2048);
+
+		System.out.println("The io mask " + iosession.getEventMask());
 
 		try {
 			CommandLine cmd = parser.parse(options, args);
@@ -150,6 +154,7 @@ public class RasrNioStreamingClient {
 				HttpAsyncRequester requester = new HttpAsyncRequester(processor);
 				BasicHttpEntityEnclosingRequest request = new BasicHttpEntityEnclosingRequest(
 						"POST", url);
+				request.addHeader(HTTP.CONTENT_TYPE, "audio/x-pcm");
 				request.setEntity(new AudioStreamingEntity(input));
 
 				Future<Integer> future = requester.execute(
@@ -184,6 +189,8 @@ public class RasrNioStreamingClient {
 
 				output.close();
 				input.close();
+				System.out.println("The io mask end "
+						+ iosession.getEventMask());
 			}
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block

@@ -1,4 +1,4 @@
-package com.redshift.test.Async;
+package com.redshift.streaming;
 
 import java.io.IOException;
 
@@ -14,6 +14,7 @@ import org.apache.http.protocol.HttpContext;
 import org.apache.http.util.Args;
 
 public class AudioRequestProducer implements HttpAsyncRequestProducer {
+	boolean isClosed = false;
 
 	private final HttpHost target;
 	private final HttpEntityEnclosingRequest request;
@@ -27,13 +28,13 @@ public class AudioRequestProducer implements HttpAsyncRequestProducer {
 	}
 
 	public void close() throws IOException {
-		// TODO Auto-generated method stub
+		isClosed = true;
 		System.out.println("Producer closed");
+		((HttpAsyncContentProducer) this.request.getEntity()).close();
 
 	}
 
 	public HttpHost getTarget() {
-		// TODO Auto-generated method stub
 		return this.target;
 	}
 
@@ -46,12 +47,9 @@ public class AudioRequestProducer implements HttpAsyncRequestProducer {
 			throws IOException {
 		((HttpAsyncContentProducer) this.request.getEntity()).produceContent(
 				encoder, ioctrl);
-
-		System.out.println("Producer content");
 	}
 
 	public void requestCompleted(HttpContext context) {
-		// TODO Auto-generated method stub
 		System.out.println("Producer request complete");
 
 	}
@@ -59,16 +57,20 @@ public class AudioRequestProducer implements HttpAsyncRequestProducer {
 	public void failed(Exception ex) {
 		// TODO Auto-generated method stub
 		System.out.println("Producer fail");
+		try {
+			((HttpAsyncContentProducer) this.request.getEntity()).close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 
 	public boolean isRepeatable() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
 	public void resetRequest() throws IOException {
-		// TODO Auto-generated method stub
 		System.out.println("Producer reset");
 
 	}

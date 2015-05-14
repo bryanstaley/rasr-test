@@ -59,6 +59,8 @@ public class StreamingRasrServlet extends HttpServlet {
 					.getServletContext().getClassLoader());
 		}
 
+		response.setContentLength(-1); //chunked.
+		response.setHeader("Transfer-Encoding", "chunked");
 		StreamingRecognizer recognizer = recognizerPool.checkout(lasik);
 		recognizer.getSource().setInputStream(request.getInputStream(), "");
 		recognizer.getResultsListener().setOutput(response.getOutputStream());

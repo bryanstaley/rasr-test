@@ -10,8 +10,13 @@
 			<artifactId>httpclient</artifactId>
 			<version>4.4</version>
 		</dependency>
-		
-		
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpmime</artifactId>
+			<version>4.4</version>
+		</dependency>
+
+
 		<dependency>
 			<groupId>org.apache.httpcomponents</groupId>
 			<artifactId>httpcore-nio</artifactId>

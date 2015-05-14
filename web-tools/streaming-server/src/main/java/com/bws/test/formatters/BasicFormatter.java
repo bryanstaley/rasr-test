@@ -9,6 +9,7 @@ import edu.cmu.sphinx.util.props.PropertySheet;
 public class BasicFormatter implements OutputFormatter {
 
 	public byte[] format(String data) throws UnsupportedEncodingException {
+		System.out.println(data);
 		return data.getBytes("UTF-8");
 	}
 

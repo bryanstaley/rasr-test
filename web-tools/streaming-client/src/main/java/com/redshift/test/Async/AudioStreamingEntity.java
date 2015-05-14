@@ -64,9 +64,7 @@ public class AudioStreamingEntity extends AbstractHttpEntity implements
 		}
 		ByteBuffer nextBuffer = ByteBuffer.wrap(data);
 		int wrote = encoder.write(nextBuffer);
-		System.out.println("Produced " + wrote + " bytes");
-		ioctrl.requestInput();
-		ioctrl.requestOutput();
+		// System.out.println("Produced " + wrote + " bytes");
 
 	}
 }

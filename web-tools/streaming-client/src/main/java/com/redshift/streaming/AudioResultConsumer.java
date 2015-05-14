@@ -1,4 +1,4 @@
-package com.redshift.test.Async;
+package com.redshift.streaming;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -12,19 +12,27 @@ import org.apache.http.protocol.HttpContext;
 
 public class AudioResultConsumer implements HttpAsyncResponseConsumer<Integer> {
 
+	boolean isClosed = false;
+
 	public void consumeContent(ContentDecoder decoder, IOControl ioctrl)
 			throws IOException {
-		ByteBuffer bb = ByteBuffer.allocate(40);
+		ByteBuffer bb = ByteBuffer.allocate(1024);
+		byte buff[] = new byte[1024];
 
 		int read = decoder.read(bb);
+		bb.flip();
+		bb.get(buff, 0, read);
 
 		System.out.println("Read " + read + "bytes!!");
+		String s = new String(buff, "UTF-8");
+		System.out.println(s);
 		ioctrl.requestInput();
 		ioctrl.requestOutput();
 
 	}
 
 	public void close() throws IOException {
+		isClosed = false;
 		// TODO Auto-generated method stub
 		System.out.println("Consumer closed");
 
@@ -70,7 +78,7 @@ public class AudioResultConsumer implements HttpAsyncResponseConsumer<Integer> {
 	public boolean isDone() {
 		// TODO Auto-generated method stub
 		System.out.println("Consumer is done");
-		return false;
+		return isClosed;
 	}
 
 }
