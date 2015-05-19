@@ -13,21 +13,20 @@ import org.apache.http.protocol.HttpContext;
 public class AudioResultConsumer implements HttpAsyncResponseConsumer<Integer> {
 
 	boolean isClosed = false;
+	MultipartDecoder multipartDecoder = new MultipartDecoder(
+			"112233445566778899001234567890");
 
 	public void consumeContent(ContentDecoder decoder, IOControl ioctrl)
 			throws IOException {
 		ByteBuffer bb = ByteBuffer.allocate(1024);
-		byte buff[] = new byte[1024];
-
 		int read = decoder.read(bb);
 		bb.flip();
-		bb.get(buff, 0, read);
 
-		System.out.println("Read " + read + "bytes!!");
-		String s = new String(buff, "UTF-8");
-		System.out.println(s);
-		ioctrl.requestInput();
-		ioctrl.requestOutput();
+		String body = multipartDecoder.getNextBody(bb);
+
+		if (body != null) {
+			System.out.println("Got a body " + body);
+		}
 
 	}
 

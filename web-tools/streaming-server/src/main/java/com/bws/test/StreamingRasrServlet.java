@@ -28,6 +28,7 @@ public class StreamingRasrServlet extends HttpServlet {
 	private static RecognizerPool recognizerPool;
 	private boolean hasUpdatedClassPath = false;
 	private URI lasik;
+	private String boundary = "112233445566778899001234567890";
 	ResultListener resultListener;
 
 	public StreamingRasrServlet() throws URISyntaxException, PropertyException,
@@ -61,6 +62,8 @@ public class StreamingRasrServlet extends HttpServlet {
 
 		response.setContentLength(-1); //chunked.
 		response.setHeader("Transfer-Encoding", "chunked");
+		response.setHeader("Content-Type", "Multipart/mixed; boundary=\""
+				+ boundary + "\"");
 		StreamingRecognizer recognizer = recognizerPool.checkout(lasik);
 		recognizer.getSource().setInputStream(request.getInputStream(), "");
 		recognizer.getResultsListener().setOutput(response.getOutputStream());
