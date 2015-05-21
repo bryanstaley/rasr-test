@@ -34,12 +34,12 @@ public class MultipartDecoder {
 		}
 
 		// Lop off first boundary
-		message = message.delete(0, firstBoundary + boundary.length());
+		message = message.delete(0, firstBoundary + boundary.length()+1);
 		int secondBoundary = message.indexOf(this.boundary);
 
 		if (secondBoundary < 0) {
 			// Add back first boundary
-			message.insert(0, this.boundary);
+			message.insert(0, this.boundary+1);
 			return null;
 		}
 		char characters[] = new char[secondBoundary];
