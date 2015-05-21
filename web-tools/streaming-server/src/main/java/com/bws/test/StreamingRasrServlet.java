@@ -60,23 +60,29 @@ public class StreamingRasrServlet extends HttpServlet {
 					.getServletContext().getClassLoader());
 		}
 
-		response.setContentLength(-1); //chunked.
-		response.setHeader("Transfer-Encoding", "chunked");
-		response.setHeader("Content-Type", "Multipart/mixed; boundary=\""
-				+ boundary + "\"");
-		StreamingRecognizer recognizer = recognizerPool.checkout(lasik);
-		recognizer.getSource().setInputStream(request.getInputStream(), "");
-		recognizer.getResultsListener().setOutput(response.getOutputStream());
-		Result r = recognizer.recognize();
-		while (r != null)
-		{
-			r = recognizer.recognize();
-		}
+		StreamingRecognizer recognizer = null;
 		try {
-			recognizerPool.checkin(lasik, recognizer);
-		} catch (UnrecognizedRecognizer e) {
-			// TODO Auto-generated catch block
+			response.setContentLength(-1); // chunked.
+			response.setHeader("Transfer-Encoding", "chunked");
+			response.setHeader("Content-Type", "Multipart/mixed; boundary=\""
+					+ boundary + "\"");
+			recognizer = recognizerPool.checkout(lasik);
+			recognizer.getSource().setInputStream(request.getInputStream(), "");
+			recognizer.getResultsListener().setOutput(
+					response.getOutputStream());
+			Result r = recognizer.recognize();
+			while (r != null) {
+				r = recognizer.recognize();
+			}
+
+		} catch (Exception e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				recognizerPool.checkin(lasik, recognizer);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 	}
