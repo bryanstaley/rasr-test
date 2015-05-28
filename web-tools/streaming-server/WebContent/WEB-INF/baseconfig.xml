@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- Adapted by NDP from Sphinx-4 "HUB4" config file -->
+
+<!-- ************************************************** -->
+<!-- Sphinx-4 Configuration File                        -->
+<!-- ************************************************** -->
+
+<config>
+  <!-- ************************************************** -->
+  <!-- Global Properties                                  -->
+  <!-- ************************************************** -->
+
+  <property name="room" value=""/>
+  <property name="sessionId" value=""/>
+  <property name="scorer" value="defaultScorer"/>
+  <property name="buildWordLattice" value="true" />
+  
+  <property name="forceReload" value="false"/>
+  <property name="recognizerPoolSize" value="4"/>
+  
+
+  <!-- ************************************************** -->
+  <!-- Components                                         -->
+  <!-- ************************************************** -->
+  
+    <!-- ************************************************** -->
+    <!-- scorer                                             -->
+    <!-- ************************************************** -->
+    
+    <component name="defaultScorer"
+    	type="edu.cmu.sphinx.result.MAPConfidenceScorer">
+    	<property name="languageWeightAdjustment" value="1.0" />
+    	<property name="dumpLattice" value="false" />
+    	<property name="dumpSausage" value="false" />
+    </component>
+    <component name="debugScorer"
+    	type="edu.cmu.sphinx.result.MAPConfidenceScorer">
+    	<property name="languageWeightAdjustment" value="1.0" />
+    	<property name="dumpLattice" value="true" />
+    	<property name="dumpSausage" value="true" />
+    </component>
+  
+
+    <!-- ************************************************** -->
+    <!-- hub4 acoustic model                                -->
+    <!-- ************************************************** -->
+
+<!--     <component name="hub4UnitManager"  -->
+<!--         type="edu.cmu.sphinx.linguist.acoustic.UnitManager"/> -->
+
+<!--     <component name="hub4AcousticModel" -->
+<!--                type="edu.cmu.sphinx.linguist.acoustic.tiedstate.TiedStateAcousticModel"> -->
+<!--         <property name="loader" value="hub4Loader"/> -->
+<!--         <property name="unitManager" value="hub4UnitManager"/> -->
+<!--     </component> -->
+
+<!--     <component name="hub4Loader" type="edu.cmu.sphinx.linguist.acoustic.tiedstate.Sphinx3Loader"> -->
+<!--         <property name="logMath" value="logMath"/> -->
+<!--         <property name="unitManager" value="hub4UnitManager"/> -->
+<!--         <property name="location" value="resource:/HUB4_8gau_13dCep_16k_40mel_133Hz_6855Hz/cd_continuous_8gau"/> -->
+<!--     </component> -->
+
+    <!-- ************************************************** -->
+    <!-- General Phonetic Dictionary (NA English)           -->
+    <!-- ************************************************** -->
+
+    <component name="generalDictionary"
+          type="edu.cmu.sphinx.linguist.dictionary.FastDictionary">
+        <property name="dictionaryPath" value="resource:/cmuRASR.dic"/>
+        <property name="fillerPath" value="resource:/acousticModels/sfe_vfAll_noises_cmu7dicAligned.cd_cont_3000_32/noisedict"/>
+        <property name="addSilEndingPronunciation" value="false"/>
+        <property name="allowMissingWords" value="false"/>
+        <property name="unitManager" value="generalUnitManager"/>
+    </component>
+    
+<!--     <component name="hub4Grammar" -->
+<!--           type="edu.cmu.sphinx.linguist.language.ngram.large.LargeTrigramModel"> -->
+<!--         <property name="unigramWeight" value=".5"/> -->
+<!--         <property name="maxDepth" value="3"/> -->
+<!--         <property name="clearCachesAfterUtterance" value="false"/> -->
+<!--         <property name="logMath" value="logMath"/> -->
+<!--         <property name="dictionary" value="hub4Dictionary"/> -->
+<!--         <property name="location" value="resource:/HUB4_trigram_lm/language_model.arpaformat.DMP" /> -->
+<!--     </component> -->
+
+	<!-- ************************************************** -->
+    <!-- RS-built General Acoustic Model                    -->
+    <!-- ************************************************** -->
+    
+	<component name="generalUnitManager" type="edu.cmu.sphinx.linguist.acoustic.UnitManager" />
+        
+	<component name="generalAcousticModel"
+		type="edu.cmu.sphinx.linguist.acoustic.tiedstate.TiedStateAcousticModel">
+		<property name="loader" value="generalLoader" />
+		<property name="unitManager" value="generalUnitManager" />
+	</component>
+
+	<component name="generalLoader"
+		type="edu.cmu.sphinx.linguist.acoustic.tiedstate.Sphinx3Loader">
+		<property name="logMath" value="logMath" />
+		<property name="unitManager" value="generalUnitManager" />
+		<property name="location" value="resource:/acousticModels/sfe_vfAll_noises_cmu7dicAligned.cd_cont_3000_32" />
+<!--  		<property name="location" value="resource:/acousticModels/sfe_wsj1short_vfUSA_TIMITaligned_common.cd_cont_3000"/>  -->
+<!-- 		<property name="location" value="resource:/WSJ_8gau_13dCep_16k_40mel_130Hz_6800Hz/cd_continuous_8gau"/> -->
+<!-- 		<property name="location" value="resource:/acousticModels/wsjvf_speex/sphinx_fe/wsjvf.cd_cont_8000"/> -->
+	</component>
+
+    <!-- ************************************************** -->
+    <!-- wsj acoustic model                                 -->
+    <!-- ************************************************** -->
+
+    <!-- <component name="wsjUnitManager"
+        type="edu.cmu.sphinx.linguist.acoustic.UnitManager"/>
+
+    <component name="wsjAcousticModel"
+               type="edu.cmu.sphinx.linguist.acoustic.tiedstate.TiedStateAcousticModel">
+        <property name="loader" value="wsjLoader"/>
+        <property name="unitManager" value="wsjUnitManager"/>
+    </component>
+
+    <component name="wsjLoader" type="edu.cmu.sphinx.linguist.acoustic.tiedstate.Sphinx3Loader">
+        <property name="logMath" value="logMath"/>
+        <property name="unitManager" value="wsjUnitManager"/>
+        <property name="location" value="resource:/WSJ_8gau_13dCep_16k_40mel_130Hz_6800Hz/cd_continuous_8gau" />
+    </component> -->
+
+    <!-- ************************************************** -->
+    <!-- digits-specific acoustic model                                 -->
+    <!-- ************************************************** -->
+
+    <component name="digitsAcousticModel"
+               type="edu.cmu.sphinx.linguist.acoustic.tiedstate.TiedStateAcousticModel">
+        <property name="loader" value="digitsLoader"/>
+        <property name="unitManager" value="digitsUnitManager"/>
+    </component>
+    
+    <component name="digitsLoader" type="edu.cmu.sphinx.linguist.acoustic.tiedstate.Sphinx3Loader">
+        <property name="logMath" value="logMath"/>
+        <property name="unitManager" value="digitsUnitManager"/>
+        <property name="location" value="resource:/acousticModels/tidigits16kHz_HBT.cd_cont_500"/>
+    </component>
+
+    <component name="digitsUnitManager"
+               type="edu.cmu.sphinx.linguist.acoustic.UnitManager"/>
+    
+    <!-- ************************************************** -->
+    <!-- logMath                                            -->
+    <!-- ************************************************** -->
+
+    <component name="logMath"
+          type="edu.cmu.sphinx.util.LogMath">
+        <property name="logBase" value="1.0001"/>
+        <property name="useAddTable" value="true"/>
+    </component>
+
+</config>

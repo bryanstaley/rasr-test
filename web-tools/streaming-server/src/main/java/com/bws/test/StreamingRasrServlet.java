@@ -8,6 +8,10 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -22,29 +26,22 @@ import edu.cmu.sphinx.util.props.ConfigurationManager;
 import edu.cmu.sphinx.util.props.PropertyException;
 
 @WebServlet("/streaming")
-public class StreamingRasrServlet extends HttpServlet {
+public class StreamingRasrServlet extends HttpServlet implements ServletContextListener {
 
 	private static final Class[] parameters = new Class[] { URL.class };
 	private static RecognizerPool recognizerPool;
 	private boolean hasUpdatedClassPath = false;
-	private URI lasik;
+	private static URI custom;
 	private String boundary = "112233445566778899001234567890";
-	ResultListener resultListener;
+	private boolean initialized = false;
 
 	public StreamingRasrServlet() throws URISyntaxException, PropertyException,
 			MalformedURLException {
-		URI base = new URI("file:///tmp/baseconfig.xml");
-		lasik = new URI("file:///tmp/test-config.xml");
-		ConfigurationManager baseConfigManager = new ConfigurationManager(
-				base.toURL());
-
-		recognizerPool = new BlockingRecognizerPool(1, baseConfigManager,
-				"wordRecognizer");
-
-		resultListener = new DumpResultListener();
-
+		
+		
 	}
 
+	
 	private static final long serialVersionUID = 1L;
 
 	protected void doGet(HttpServletRequest request,
@@ -66,7 +63,7 @@ public class StreamingRasrServlet extends HttpServlet {
 			response.setHeader("Transfer-Encoding", "chunked");
 			response.setHeader("Content-Type", "Multipart/mixed; boundary=\""
 					+ boundary + "\"");
-			recognizer = recognizerPool.checkout(lasik);
+			recognizer = recognizerPool.checkout(custom);
 			recognizer.getSource().setInputStream(request.getInputStream(), "");
 			recognizer.getResultsListener().setOutput(
 					response.getOutputStream());
@@ -79,7 +76,7 @@ public class StreamingRasrServlet extends HttpServlet {
 			e.printStackTrace();
 		} finally {
 			try {
-				recognizerPool.checkin(lasik, recognizer);
+				recognizerPool.checkin(custom, recognizer);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
@@ -103,6 +100,39 @@ public class StreamingRasrServlet extends HttpServlet {
 		} catch (final Throwable t) {
 			t.printStackTrace();
 		}
+	}
+
+
+	@Override
+	public void contextInitialized(ServletContextEvent sce) {
+		ServletContext context = sce.getServletContext();
+		URL base;
+		try {
+			base = context.getResource("WEB-INF/baseconfig.xml");
+			URL test = context.getResource("WEB-INF/test-config.xml");
+			custom = context.getResource("WEB-INF/test-config.xml").toURI();
+			ConfigurationManager baseConfigManager = new ConfigurationManager(
+					base);
+
+			recognizerPool = new BlockingRecognizerPool(1, baseConfigManager,
+					"wordRecognizer");
+			
+			initialized = true;
+		} catch (MalformedURLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (URISyntaxException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+
+
+	@Override
+	public void contextDestroyed(ServletContextEvent sce) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
