@@ -44,7 +44,7 @@ public class NioOutputEventHandler implements NHttpClientEventHandler {
 
 	public void inputReady(NHttpClientConnection conn, ContentDecoder decoder)
 			throws IOException, HttpException {
-		System.out.println("Client Event Handler - inputReady");
+		//System.out.println("Client Event Handler - inputReady");
 
 		final HttpAsyncClientExchangeHandler handler = getHandler(conn);
 		handler.consumeContent(decoder, conn);
