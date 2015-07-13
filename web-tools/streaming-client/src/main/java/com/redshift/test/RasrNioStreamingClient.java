@@ -97,7 +97,7 @@ public class RasrNioStreamingClient {
 		int LOOPS = 1;
 		int MARK_SAVE_BYTES = 1000000;
 		ExecutorService executor = Executors.newSingleThreadExecutor();
-		String url = "/rasr-streaming-server/streaming";
+		String url = "/streaming-server/streaming";
 
 		DefaultConnectingIOReactor dcior = new DefaultConnectingIOReactor();
 		SessionRequest session = dcior.connect(new InetSocketAddress(

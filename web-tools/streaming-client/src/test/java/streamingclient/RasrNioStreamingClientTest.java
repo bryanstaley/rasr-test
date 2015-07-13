@@ -16,9 +16,9 @@ public class RasrNioStreamingClientTest {
 	public void test() {
 		List<String> args = new ArrayList();
 		args.add("-f");
-		// args.add("/home/bstaley/git/sphinx4/src/apps/edu/cmu/sphinx/demo/lattice/10001-90210-01803.wav");
+		args.add("/home/bstaley/git/sphinx4/src/apps/edu/cmu/sphinx/demo/lattice/10001-90210-01803.wav");
 		// args.add("/home/bstaley/git/rasr/rasr-sr/test/A1.wav");
-		args.add("/home/bstaley/Downloads/test.wav");
+		// args.add("/home/bstaley/Downloads/test.wav");
 		args.add("-l");
 		args.add("10");
 		args.add("-d");

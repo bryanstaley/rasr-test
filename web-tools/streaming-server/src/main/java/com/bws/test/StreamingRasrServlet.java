@@ -7,8 +7,10 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Properties;
 
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -18,30 +20,26 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.bws.test.RecognizerPool.UnrecognizedRecognizer;
-
-import edu.cmu.sphinx.decoder.ResultListener;
 import edu.cmu.sphinx.result.Result;
 import edu.cmu.sphinx.util.props.ConfigurationManager;
 import edu.cmu.sphinx.util.props.PropertyException;
 
 @WebServlet("/streaming")
-public class StreamingRasrServlet extends HttpServlet implements ServletContextListener {
+public class StreamingRasrServlet extends HttpServlet implements
+		ServletContextListener {
 
 	private static final Class[] parameters = new Class[] { URL.class };
 	private static RecognizerPool recognizerPool;
 	private boolean hasUpdatedClassPath = false;
 	private static URI custom;
-	private String boundary = "112233445566778899001234567890";
-	private boolean initialized = false;
+	private static final String boundary = "112233445566778899001234567890";
+	private static List<String> additionalClassPaths = new ArrayList<String>();
 
 	public StreamingRasrServlet() throws URISyntaxException, PropertyException,
 			MalformedURLException {
-		
-		
+
 	}
 
-	
 	private static final long serialVersionUID = 1L;
 
 	protected void doGet(HttpServletRequest request,
@@ -90,18 +88,13 @@ public class StreamingRasrServlet extends HttpServlet implements ServletContextL
 			final Class<URLClassLoader> sysclass = URLClassLoader.class;
 			Method method = sysclass.getDeclaredMethod("addURL", parameters);
 			method.setAccessible(true);
-			method.invoke(cl, new Object[] { new URI(
-					"file:///home/bstaley/git/rasr/rasr-data/").toURL() });
-			method.invoke(cl, new Object[] { new URI(
-					"file:///home/bstaley/git/sphinx4-data/").toURL() });
-			method.invoke(cl, new Object[] { new URI(
-					"file:///home/bstaley/git/rasr/rasr-data/phonemes/")
-					.toURL() });
+			for (String s : this.additionalClassPaths) {
+				method.invoke(cl, new Object[] { new URI(s).toURL() });
+			}
 		} catch (final Throwable t) {
 			t.printStackTrace();
 		}
 	}
-
 
 	@Override
 	public void contextInitialized(ServletContextEvent sce) {
@@ -109,30 +102,37 @@ public class StreamingRasrServlet extends HttpServlet implements ServletContextL
 		URL base;
 		try {
 			base = context.getResource("WEB-INF/baseconfig.xml");
-			URL test = context.getResource("WEB-INF/test-config.xml");
 			custom = context.getResource("WEB-INF/test-config.xml").toURI();
 			ConfigurationManager baseConfigManager = new ConfigurationManager(
 					base);
 
 			recognizerPool = new BlockingRecognizerPool(1, baseConfigManager,
 					"wordRecognizer");
-			
-			initialized = true;
+
+			this.additionalClassPaths.clear();
+			Properties properties = new Properties();
+			properties.load(context
+					.getResourceAsStream("/WEB-INF/server.properties"));
+			String uris = properties.getProperty("server_class_path_uris", "");
+			for (String s : uris.split(","))
+				this.additionalClassPaths.add(s);
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (URISyntaxException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		
-	}
 
+	}
 
 	@Override
 	public void contextDestroyed(ServletContextEvent sce) {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 }
