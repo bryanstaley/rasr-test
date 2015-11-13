@@ -7,7 +7,6 @@ MANIFEST
 *.tar.gz
 *.tgz
 build
-.project
 .coverage
 .settings
 .classpath
