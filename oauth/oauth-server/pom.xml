@@ -1,9 +1,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
-	<groupId>oauth-server</groupId>
+	<groupId>com.redshift.rasr</groupId>
 	<artifactId>oauth-server</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.1</version>
 	<packaging>war</packaging>
 	<build>
 		<sourceDirectory>src</sourceDirectory>
@@ -76,9 +76,9 @@
 			<version>0.0.1</version>
 		</dependency>
 		<dependency>
-			<groupId>oauth-filter</groupId>
+			<groupId>com.redshift.rasr</groupId>
 			<artifactId>oauth-filter</artifactId>
-			<version>0.0.1-SNAPSHOT</version>
+			<version>0.0.1</version>
 		</dependency>
 
 	</dependencies>
