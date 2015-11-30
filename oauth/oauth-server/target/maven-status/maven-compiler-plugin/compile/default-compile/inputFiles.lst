@@ -1,1 +1,5 @@
-/home/bstaley/git/rasr-test/oauth/oauth-server/src/com/rasr/test/AuthServer.java
+/home/bstaley/git/rasr-test/oauth/oauth-server/src/com/rasr/test/ClientAddServlet.java
+/home/bstaley/git/rasr-test/oauth/oauth-server/src/com/rasr/test/ResourceServlet.java
+/home/bstaley/git/rasr-test/oauth/oauth-server/src/com/rasr/test/AuthorizeServlet.java
+/home/bstaley/git/rasr-test/oauth/oauth-server/src/com/rasr/test/TokenServlet.java
+/home/bstaley/git/rasr-test/oauth/oauth-server/src/com/rasr/test/Oauth2ResourceFilter.java
