@@ -6,12 +6,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.ws.rs.container.ContainerRequestContext;
-import javax.ws.rs.container.ContainerRequestFilter;
-import javax.ws.rs.container.PreMatching;
-
 @WebServlet("/resource")
-public class ResourceServlet extends HttpServlet implements ContainerRequestFilter{
+public class ResourceServlet extends HttpServlet {
 
 	/**
 	 * 
@@ -36,12 +32,6 @@ public class ResourceServlet extends HttpServlet implements ContainerRequestFilt
 			throws ServletException, IOException {
 		// TODO Auto-generated method stub
 		doGet(request, response);
-	}
-
-	@Override
-	public void filter(ContainerRequestContext arg0) throws IOException {
-		System.out.println(arg0.getUriInfo().getPath());
-		
 	}
 
 }

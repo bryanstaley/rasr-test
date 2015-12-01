@@ -22,7 +22,8 @@ CREATE TABLE IF NOT EXISTS `rasr_oauth`.`client` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `client_id` VARCHAR(45) NOT NULL,
   `client_secret` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`id`))
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `client_id_UNIQUE` (`client_id` ASC))
 ENGINE = InnoDB;
 
 
@@ -38,6 +39,7 @@ CREATE TABLE IF NOT EXISTS `rasr_oauth`.`tokens` (
   PRIMARY KEY (`id`),
   UNIQUE INDEX `id_UNIQUE` (`id` ASC),
   INDEX `fk_tokens_client_idx` (`client_id` ASC),
+  UNIQUE INDEX `token_UNIQUE` (`token` ASC),
   CONSTRAINT `fk_tokens_client`
     FOREIGN KEY (`client_id`)
     REFERENCES `rasr_oauth`.`client` (`id`)
