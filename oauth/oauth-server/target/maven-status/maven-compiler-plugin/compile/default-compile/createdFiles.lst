@@ -1,6 +1,0 @@
-com/redshift/rasr/oauth/server/TokenServlet.class
-com/redshift/rasr/oauth/server/AuthorizeServlet.class
-com/redshift/rasr/oauth/server/TokenServlet$UnauthorizedException.class
-com/redshift/rasr/oauth/server/ClientAddServlet.class
-com/redshift/rasr/oauth/server/ResourceServlet.class
-com/redshift/rasr/oauth/server/FckServlet.class

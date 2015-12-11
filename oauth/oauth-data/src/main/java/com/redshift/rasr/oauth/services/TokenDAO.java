@@ -23,6 +23,7 @@ public class TokenDAO implements TokenService {
 			Query query = s.createQuery(selectHql);
 			query.setString("token", id);
 			Tokens retToken = (Tokens) query.uniqueResult();
+
 			logger.info(String.format("Retrieved token %s for id %s", retToken, id));
 			return retToken;
 

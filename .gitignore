@@ -10,3 +10,4 @@ build
 .coverage
 .settings
 .classpath
+target/
