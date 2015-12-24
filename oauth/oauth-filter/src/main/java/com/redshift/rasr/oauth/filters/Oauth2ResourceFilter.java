@@ -22,7 +22,7 @@ import org.apache.oltu.oauth2.common.message.types.ParameterStyle;
 import org.apache.oltu.oauth2.rs.request.OAuthAccessResourceRequest;
 import org.apache.oltu.oauth2.rs.response.OAuthRSResponse;
 
-import com.redshift.rasr.oauth.data.Tokens;
+import com.redshift.rasr.oauth.data.Token;
 import com.redshift.rasr.oauth.services.TokenDAO;
 import com.redshift.rasr.oauth.services.TokenService;
 
@@ -56,7 +56,7 @@ public class Oauth2ResourceFilter implements Filter {
 			String accessToken = oauthRequest.getAccessToken();
 
 			// ... validate access token
-			Tokens token = tokenService.getToken(accessToken);
+			Token token = tokenService.getToken(accessToken);
 
 			if (token == null) {
 				logger.warning(String.format("Token %s not found in the database!", accessToken));

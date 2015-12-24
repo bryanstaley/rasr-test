@@ -1,9 +1,9 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
 "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
-<!-- Generated Nov 13, 2015 3:37:25 PM by Hibernate Tools 4.3.1.Final -->
+<!-- Generated Dec 23, 2015 1:35:17 PM by Hibernate Tools 4.3.1.Final -->
 <hibernate-mapping>
-    <class name="com.redshift.rasr.oauth.data.Tokens" table="tokens" catalog="rasr_oauth" optimistic-lock="version">
+    <class name="com.redshift.rasr.oauth.data.Token" table="token" catalog="rasr_oauth" optimistic-lock="version">
         <id name="id" type="java.lang.Integer">
             <column name="id" />
             <generator class="identity" />
@@ -12,10 +12,10 @@
             <column name="client_id" not-null="true" />
         </many-to-one>
         <property name="token" type="string">
-            <column name="token" length="45" not-null="true" />
+            <column name="token" length="45" not-null="true" unique="true" />
         </property>
         <property name="expires" type="timestamp">
-            <column name="expires" length="19" not-null="true" />
+            <column name="expires" length="0" not-null="true" />
         </property>
         <property name="authorizationServer" type="string">
             <column name="authorization_server" length="45" />

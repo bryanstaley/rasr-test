@@ -1,5 +1,5 @@
 package com.redshift.rasr.oauth.data;
-// Generated Nov 13, 2015 3:37:25 PM by Hibernate Tools 4.3.1.Final
+// Generated Dec 23, 2015 1:35:17 PM by Hibernate Tools 4.3.1.Final
 
 import java.util.HashSet;
 import java.util.Set;
@@ -12,7 +12,8 @@ public class Client implements java.io.Serializable {
 	private Integer id;
 	private String clientId;
 	private String clientSecret;
-	private Set tokenses = new HashSet(0);
+	private Set clientNodes = new HashSet(0);
+	private Set tokens = new HashSet(0);
 
 	public Client() {
 	}
@@ -22,10 +23,11 @@ public class Client implements java.io.Serializable {
 		this.clientSecret = clientSecret;
 	}
 
-	public Client(String clientId, String clientSecret, Set tokenses) {
+	public Client(String clientId, String clientSecret, Set clientNodes, Set tokens) {
 		this.clientId = clientId;
 		this.clientSecret = clientSecret;
-		this.tokenses = tokenses;
+		this.clientNodes = clientNodes;
+		this.tokens = tokens;
 	}
 
 	public Integer getId() {
@@ -52,12 +54,20 @@ public class Client implements java.io.Serializable {
 		this.clientSecret = clientSecret;
 	}
 
-	public Set getTokenses() {
-		return this.tokenses;
+	public Set getClientNodes() {
+		return this.clientNodes;
 	}
 
-	public void setTokenses(Set tokenses) {
-		this.tokenses = tokenses;
+	public void setClientNodes(Set clientNodes) {
+		this.clientNodes = clientNodes;
+	}
+
+	public Set getTokens() {
+		return this.tokens;
+	}
+
+	public void setTokens(Set tokens) {
+		this.tokens = tokens;
 	}
 
 }

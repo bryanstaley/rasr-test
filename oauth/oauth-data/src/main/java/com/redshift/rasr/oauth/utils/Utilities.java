@@ -23,5 +23,11 @@ public class Utilities {
 		return sessionFactory.getCurrentSession();
 
 	}
+	
+	public static SessionFactory getSessionFactory() {
+
+		return Utilities.sessionFactory;
+
+	}
 
 }

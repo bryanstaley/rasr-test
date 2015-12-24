@@ -112,6 +112,8 @@ public class TokenServlet extends HttpServlet {
 			response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
 		}
 		catch(Exception ex){
+			logger.severe("received exception" + ex);
+			ex.printStackTrace();
 			response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
 		}
 
