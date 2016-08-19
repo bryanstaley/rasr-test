@@ -35,7 +35,7 @@ color_map['Prune']='deepskyblue'
 
 def get_color(in_type):
     from matplotlib.colors import rgb2hex
-    
+    in_type = in_type.strip()
     if in_type not in color_map:
         color_map[in_type]=rgb2hex(np.random.rand(3,1))
     return color_map[in_type]
