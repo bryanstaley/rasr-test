@@ -5,7 +5,11 @@ Created on May 13, 2016
 '''
 import os
 import matplotlib
-matplotlib.use("Agg")
+try:
+    matplotlib.use("Qt4Agg")
+except Exception:
+    print "Unable to run with Qt4App backend..Try 'sudo yum install PyQt4' and run again.  Interactive plots not available (hint: use the -o option)!"
+    matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import matplotlib.patches as mpatches
 from collections import namedtuple
@@ -13,39 +17,28 @@ import numpy as np
 
 DataTuple = namedtuple("DataTuple",['source','record_time','num_calls','sample_time'])
 
-def get_color(type):
-    if 'Feature Transform' in type:
-        return 'peachpuff'
-    elif 'Feature Extraction' in type:
-        return 'indigo'
-    elif 'Windower' in type:
-        return 'green'
-    elif 'Speech Marker' in type:
-        return 'tan'
-    elif 'Preemphzsizer' in type:
-        return 'lightpink'
-    elif 'Dither' in type:
-        return 'lime'
-    elif 'Speech Classifier' in type:
-        return 'skyblue'
-    elif 'Stream Data Source' in type:
-        return 'cyan'
-    elif 'Dct2' in type:
-        return 'red'
-    elif 'Mel Filter Bank' in type:
-        return 'darkorange'
-    elif 'Fft' in type:
-        return 'forestgreen'
-    elif 'Grow' in type:
-        return 'mediumvioletred'
-    elif 'Score' in type:
-        return 'darkred'
-    elif 'Prune' in type:
-        return 'deepskyblue'
+color_map = {}
+color_map['Feature Transform']='peachpuff'
+color_map['Feature Extraction']='indigo'
+color_map['Windower']='green'
+color_map['Speech Marker']='tan'
+color_map['Preemphzsizer']='lightpink'
+color_map['Dither']='lime'
+color_map['Speech Classifier']='skyblue'
+color_map['Stream Data Source']='cyan'
+color_map['Dct2']='red'
+color_map['Mel Filter Bank']='darkorange'
+color_map['Fft']='forestgreen'
+color_map['Grow']='mediumvioletred'
+color_map['Score']='darkred'
+color_map['Prune']='deepskyblue'
 
-
-    return 'darkgrey'
-
+def get_color(in_type):
+    from matplotlib.colors import rgb2hex
+    
+    if in_type not in color_map:
+        color_map[in_type]=rgb2hex(np.random.rand(3,1))
+    return color_map[in_type]
 
 
 def parse_csv_file(csv_data_file,start_offset,end_offset):
@@ -82,8 +75,8 @@ def parse_csv_data(csv_data,start_offset,end_offset):
 
 def get_sources(data):
     return list(set([a[0] for a in data]))
-def get_idx(sources,type):
-    return sources.index(type)
+def get_idx(sources,in_type):
+    return sources.index(in_type)
 def get_min_max(data):
     l = [x.record_time for x in data]
     return min(l),max(l)
@@ -92,7 +85,7 @@ def get_legend_data(data):
     return [mpatches.Patch(color=get_color(a),label=a) for a in list(set([a[0] for a in data]))]
 
 def get_latest_data_file(from_file,offset_from_end):
-    dir, base = os.path.split(from_file)
+    _, base = os.path.split(from_file)
     matching_files = []
     for d in os.listdir(dir):
         if base in d:
@@ -144,8 +137,12 @@ def generate_figure_from_data(in_data,
                bbox_to_anchor=(0., 1.02, 1., .102),
                loc=3,ncol=9,mode='expand'
            )
-    plt.savefig(to_file,
-                format='png')
+    
+    if to_file:
+        plt.savefig(to_file,
+                    format='png')
+    else:
+        plt.show()
     
 def generate_figure(from_file,
                     to_file,
@@ -155,7 +152,6 @@ def generate_figure(from_file,
     
     if latest:
         f = get_latest_data_file(from_file,latest)
-        print f
         data = parse_csv_file(csv_data_file=f,
                               start_offset=start_offset,
                               end_offset=end_offset)

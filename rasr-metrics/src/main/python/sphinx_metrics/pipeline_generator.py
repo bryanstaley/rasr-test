@@ -1,3 +1,4 @@
+#!/usr/bin/env python
 '''
 Created on May 16, 2016
 
@@ -10,7 +11,6 @@ from pipeline_metrics import timeline
 
 
 def parse_args(arguments):
-    data=[]
     parser = argparse.ArgumentParser()
     parser.add_argument('-s','--start',
                         type=float,
@@ -18,11 +18,12 @@ def parse_args(arguments):
     parser.add_argument('-e','--end',
                         type=float,
                         default=100.0)
-    parser.add_argument('-f','--file')
+    parser.add_argument('-f','--file',
+                        required=True)
     parser.add_argument('-l','--latest',
                         type=int)
     parser.add_argument('-o','--out-file',
-                        default='/tmp/a.png')
+                        default=None)
     
     return parser.parse_args(arguments)
 
