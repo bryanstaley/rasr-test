@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <EditTextPreference
+        android:key="@string/rasr_host_pref"
+        android:defaultValue="45.79.1.202"
+        android:title="RASR Host"
+    />
+    <EditTextPreference
+        android:key="@string/rasr_port_pref"
+        android:defaultValue="8080"
+        android:title="RASR Port"
+        />
+    <EditTextPreference
+        android:key="@string/rasr_node_pref"
+        android:defaultValue="42"
+        android:title="RASR Node ID"
+        />
+    <EditTextPreference
+    android:key="@string/rasr_sample_rate_pref"
+    android:defaultValue="16000"
+    android:title="RASR Sample Rate ID"
+    />
+    <EditTextPreference
+        android:key="@string/rasr_chunk_upload_size_pref"
+        android:defaultValue="1025"
+        android:title="RASR Chunk Upload Size"/>
+    <EditTextPreference
+        android:key="@string/rasr_post_timeout_pref"
+        android:defaultValue="20"
+        android:title="RASR POST Timeout"/>
+
+</PreferenceScreen>
