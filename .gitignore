@@ -3,6 +3,7 @@
 *.swp
 tmp*
 *.tar.gz
+*.pyc
 MANIFEST
 *.tar.gz
 *.tgz
