@@ -85,14 +85,14 @@ def get_legend_data(data):
     return [mpatches.Patch(color=get_color(a),label=a) for a in list(set([a[0] for a in data]))]
 
 def get_latest_data_file(from_file,offset_from_end):
-    _, base = os.path.split(from_file)
+    directory, base = os.path.split(from_file)
     matching_files = []
-    for d in os.listdir(dir):
+    for d in os.listdir(directory):
         if base in d:
             matching_files.append(d)
     matching_files.sort()
     print from_file,matching_files
-    return os.path.join(dir,matching_files[-offset_from_end])
+    return os.path.join(directory,matching_files[-offset_from_end])
 
 def generate_figure_from_csv(in_csv_data,
                              to_file,

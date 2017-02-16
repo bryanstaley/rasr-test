@@ -20,6 +20,6 @@ class Test(unittest.TestCase):
 
     def testStream(self):
         with open('/tmp/a.raw','rb') as audio_file:
-            resp = self.test_client.post('/rasr/recognize',data=audio_file.read())
+            resp = self.test_client.post('/rasr-ws/rasr/control/42',data=audio_file.read())
             print resp
 

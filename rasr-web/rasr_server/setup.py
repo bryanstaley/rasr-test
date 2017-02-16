@@ -13,6 +13,8 @@ version = '1.0'
 setup(name='rasr_server',
       version=version,
       install_requires=['flask',
+                        'sqlalchemy',
+                        'mysql-python',
                         'grpcio==1.1.0',
                         'PyAudio==0.2.10',
                         'grpc-google-cloud-speech-v1beta1==0.14.0',
