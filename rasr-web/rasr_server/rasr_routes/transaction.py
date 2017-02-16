@@ -10,8 +10,9 @@ from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import Column, Integer, String, DateTime
 
-#db_uri = 'mysql+mysqldb://rasr:password@173.194.240.114/rasr'
-db_uri = 'mysql+mysqldb://rasr:password@127.0.0.1:3306/rasr'
+#db_uri = 'mysql+mysqldb://rasr:password@127.0.0.1:3306/rasr'
+db_uri = 'mysql+mysqldb://rasr:password@173.194.240.114:3306/rasr'
+
 
 engine = create_engine(db_uri,
                        convert_unicode=True,
